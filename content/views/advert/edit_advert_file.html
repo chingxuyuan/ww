@@ -39,6 +39,7 @@
                         $("#name").val(data.object.name);
                         $("#id").val(data.object.id);
                         $("#show_type").val(new Number(data.object.type)+"");
+                        $("#type").val(data.object.type);
                       //  $("#price").val(data.object.price);
                         $("#resourceURL").text(data.object.resourceURL);
                         $("#targetURL").text(data.object.targetURL);
@@ -107,6 +108,7 @@
                 <tr>
 						<td class="ui_text_rt">广告显示类型</td>
 						<td class="ui_text_lt">
+						<input type="hidden" id="type" name="type" class="ui_input_txt02"  value="0"/>
 							<select id="show_type" class="ui_select01" disabled>
 								<option value="0" >横幅广告</option>
 								<option value="1">插屏广告</option>

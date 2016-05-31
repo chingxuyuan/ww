@@ -98,8 +98,8 @@ public class Advert {
 
 		//advert.setType(GlobalConstants.ADVERT_TYPE_INSTALL);
 		advert.setCreateTime(new Date());
-        advert.setPackageName(null);
-        advert.setResourceURL(null);
+//        advert.setPackageName(null);
+//        advert.setResourceURL(null);
 		dao.updateIgnoreNull(advert);
 		return Result.newObjectResult(advert);
 	}
@@ -163,10 +163,11 @@ public class Advert {
 
 	@At("/update-url-advert")
 	public Result updateURLAdvert (@Param("..") AdvertInfo advert) {
-
-		advert.setType(GlobalConstants.ADVERT_TYPE_BANNER);
+		//advert.setType(GlobalConstants.ADVERT_TYPE_INSTALL);
 		advert.setCreateTime(new Date());
-		advert = dao.insert(advert);
+//        advert.setPackageName(null);
+//        advert.setResourceURL(null);
+		dao.updateIgnoreNull(advert);
 		return Result.newObjectResult(advert);
 	}
 }
