@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="../../scripts/jquery/jquery-1.7.1.js"></script>
+	<link href="../../style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+	<link href="../../style/authority/common_style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="../../scripts/authority/commonAll.js"></script>
+	<script type="text/javascript" src="../../scripts/fancybox/jquery.fancybox-1.3.4.js"></script>
+	<script type="text/javascript" src="../../scripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../style/authority/jquery.fancybox-1.3.4.css" media="screen"></link>
+	<script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
+	<script type="text/javascript" src="../../scripts/table.js"></script>
+	<title>信息管理系统</title>
+	<style>
+	.alt td {
+		background: black !important;
+	}
+	</style>
+	<script type="text/javascript">
+		function update_data_list(table, datas, click_event, delete_click_event){
+	
+			for(var i = 0; i < datas.length; i++){
+				var item = datas[i];
+				var row = add_table_row(table, i);
+				row.onclick = click_event;
+				add_table_cell(row, item.name);
+				add_table_link_cell(row, "删除", delete_click_event);
+			}
+		}
+	</script>
+	<script type="text/javascript">
+		var current_area_row = null;
+		
+		$(function(){
+			current_area_row = null;
+			
+			$.ajax({
+				url : "/system/meta/list-area",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						var items = $("#area_items")[0];
+						update_data_list(items, data.object, on_area_item_click, on_item_delete_area_click);
+					}
+				}
+			});
+		});
+		function on_button_insert_area(){			
+			var name = $("#text_area_name").val();
+			
+			$.ajax({
+				url : "/system/meta/insert-area",
+				dataType : "json",
+				data : "name=" + name,
+				type : "POST",
+				success : function(data){
+					var items = $("#area_items")[0];
+					var row = add_table_row(items, items.rows.length);
+					row.onclick = on_area_item_click;
+					add_table_cell(row, name);
+					add_table_link_cell(row, "删除", on_item_delete_area_click);
+					select_table_row(items, row, "white", "#00ccff");
+					current_area_row = row;
+				},
+				error : function(){
+					
+				}
+			});
+		}
+		function on_button_update_area(){
+			
+			if(current_area_row == null){
+				return;
+			}
+			
+			var old_name = current_area_row.cells[0].innerText;
+			var new_name = $("#text_area_name").val();
+			
+			$.ajax({
+				url : "/system/meta/update-area",
+				dataType : "json",
+				data : "old_name=" + old_name + "&new_name=" + new_name,
+				type : "POST",
+				success : function(data){
+					current_area_row.cells[0].innerText = new_name;
+				},
+				error : function(){
+					
+				}
+			});
+		}
+		function on_area_item_click(){
+			current_area_row = this;
+			select_table_row(this.parentNode, this, "white", "#00ccff");
+			var area = this.cells[0].innerText;
+			$("#text_area_name").val(area);
+			list_city(area);
+		}
+		function on_item_delete_area_click(){
+			var row = this.parentNode.parentNode;
+			
+			if(current_area_row == row){
+				current_area_row = null;
+			}
+			
+			var name = row.cells[0].innerText;
+			
+			$.ajax({
+				url : "/system/meta/delete-area",
+				dataType : "json",
+				data : "name=" + name,
+				type : "POST",
+				success : function(data){
+					var items = $("#area_items")[0];
+					items.removeChild(row);
+					$("#city_items").rows.length = 0;
+				},
+				error : function(){
+					
+				}
+			});
+		}
+	</script>
+	<script type="text/javascript">
+		var current_city_row = null;
+		var current_area = null;
+		
+		function list_city(area){
+			current_city_row = null;
+			current_area = area;
+			var items = $("#city_items")[0];
+			
+			while(items.childNodes.length > 0){
+				items.removeChild(items.firstChild);
+			}
+			
+			$.ajax({
+				url : "/system/meta/list-city",
+				dataType : "json",
+				data : "area=" + area,
+				type : "POST",
+				success : function(data){
+					if(data.result){						
+						update_data_list(items, data.object, on_city_item_click, on_item_delete_city_click);
+					}
+				}
+			});
+		}
+		function on_button_insert_city(){
+			var name = $("#text_city_name").val();
+			
+			$.ajax({
+				url : "/system/meta/insert-city",
+				dataType : "json",
+				data : "area=" + current_area + "&name=" + name,
+				type : "POST",
+				success : function(data){
+					var items = $("#city_items")[0];
+					var row = add_table_row(items, items.rows.length);
+					row.onclick = on_city_item_click;
+					add_table_cell(row, name);
+					add_table_link_cell(row, "删除", on_item_delete_city_click);
+					select_table_row(items, row, "white", "#00ccff");
+					current_city_row = row;
+				},
+				error : function(){
+					
+				}
+			});
+		}
+		function on_button_update_city(){
+			
+			if(current_city_row == null){
+				return;
+			}
+			
+			var old_name = current_city_row.cells[0].innerText;
+			var new_name = $("#text_city_name").val();
+			
+			$.ajax({
+				url : "/system/meta/update-city",
+				dataType : "json",
+				data : "area=" + current_area + "&old_name=" + old_name + "&new_name=" + new_name,
+				type : "POST",
+				success : function(data){
+					current_city_row.cells[0].innerText = new_name;
+				},
+				error : function(){
+					
+				}
+			});
+		}
+		function on_city_item_click(){
+			current_city_row = this;
+			select_table_row(this.parentNode, this, "white", "#00ccff");
+			var text = this.cells[0].innerText;
+			$("#text_city_name").val(text);
+		}
+		function on_item_delete_city_click(){
+			var row = this.parentNode.parentNode;
+			
+			if(current_city_row == row){
+				current_city_row = null;
+			}
+			
+			var name = row.cells[0].innerText;
+			
+			$.ajax({
+				url : "/system/meta/delete-city",
+				dataType : "json",
+				data : "area=" + current_area + "&name=" + name,
+				type : "POST",
+				success : function(data){
+					var items = $("#city_items")[0];
+					items.removeChild(row);
+				},
+				error : function(){
+					
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post">
+		<input type="hidden" name="allIDCheck" value="" id="allIDCheck" />
+		<input type="hidden" name="fangyuanEntity.fyXqName" value="" id="fyXqName" />
+		<div id="container">
+			<div class="ui_content">
+				<div class="ui_tb" style="width:40%; float:left; padding:16px">
+					<table class="table" cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+						<thead>
+							<tr>
+								<th>区域</th>
+								<th style="width:80px"></th>
+							</tr>
+						</thead>
+						<tbody id="area_items"></tbody>
+					</table>
+					<div class="ui_tb_h30">
+						<div class="ui_frt" style="width:100%">
+							<input type="text" style="width:55%; height:22px; border-style:0 1 #bbbbbb;" id="text_area_name" />
+							<input type="button" class="ui_input_btn01" id="btn_update" value="修改" onclick="on_button_update_area()" />
+							<input type="button" class="ui_input_btn01" id="btn_insert" value="添加" onclick="on_button_insert_area()" />
+						</div>
+					</div>
+				</div>
+				<div class="ui_tb" style="width:40%; float:left; padding:16px">
+					<table class="table" cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+						<thead>
+							<tr>
+								<th>城市</th>
+								<th style="width:80px"></th>
+							</tr>
+						</thead>
+						<tbody id="city_items"></tbody>
+					</table>
+					<div class="ui_tb_h30">
+						<div class="ui_frt" style="width:100%">
+							<input type="text" style="width:55%; height:22px; border-style:0 1 #bbbbbb;" id="text_city_name" />
+							<input type="button" class="ui_input_btn01" id="btn_update" value="修改" onclick="on_button_update_city()" />
+							<input type="button" class="ui_input_btn01" id="btn_insert" value="添加" onclick="on_button_insert_city()" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

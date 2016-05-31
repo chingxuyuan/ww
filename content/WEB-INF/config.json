@@ -1,0 +1,10 @@
+{
+	"apkUploadDir" : "/upload/apk/",
+	"pluginUploadDir" : "/upload/plugin/",
+	"imageUploadDir" : "/upload/image/",
+	"sqls" :
+			[
+				"create view view_adv_publish_info as select publish.*, advert.c_name as c_advert_name, rule.c_name as c_rule_name, channel.c_name as c_channel_name from adv_publish_info publish inner join adv_advert_info advert on publish.c_advert_id = advert.id inner join adv_rule_info rule on publish.c_rule_id = rule.id inner join sys_channel_info channel on publish.c_channel_id = channel.id",
+				"create view view_adv_active_report as select report.*, channel.c_name as c_channel_name from adv_active_report report inner join sys_channel_info channel on report.c_channel_id = channel.id"
+			]
+}

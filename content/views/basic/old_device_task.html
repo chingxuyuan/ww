@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="../../scripts/jquery/jquery-1.7.1.js"></script>
+	<link href="../../style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+	<link href="../../style/authority/common_style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="../../scripts/authority/commonAll.js"></script>
+	<script type="text/javascript" src="../../scripts/fancybox/jquery.fancybox-1.3.4.js"></script>
+	<script type="text/javascript" src="../../scripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../style/authority/jquery.fancybox-1.3.4.css" media="screen"></link>
+	<script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
+	<script type="text/javascript" src="../../scripts/table.js"></script>
+	<title>信息管理系统</title>
+	<style>
+	.alt td {
+		background: black !important;
+	}
+	</style>
+	<script type="text/javascript">
+		function update_data_list(table, datas) {
+	
+			for (var i = 0; i < datas.length; i++) {
+				var item = datas[i];
+				var row = add_table_row(items, i);
+				add_table_cell(row, item.id);
+				add_table_cell(row, item.advertName);
+				add_table_cell(row, item.advertType);
+				add_table_cell(row, item.publishName);
+				add_table_cell(row, item.advertTime);
+				add_table_cell(row, item.reportTime);
+				add_table_link_cell(row, "", on_item_click);
+			}
+		}
+		$(function() {
+			list();
+		});
+		function list() {
+			var items = $("#items")[0];
+			var form = $("form");
+			var param = form.serialize();
+			clear_data_list(items);
+	
+			$.ajax({
+				url : "/youyiadv_test/platform/service/task-list",
+				dataType : "json",
+				type : "POST",
+				data : param,
+				success : function(data) {
+					if (data.result) {
+						update_page_info(data);
+						update_data_list(items, data.object);
+					}
+				}
+			});
+		}
+		function on_item_click() {
+			var id = this.parentNode.parentNode.cells[0].innerText;
+		}
+	</script>
+</head>
+<body>
+	<form>
+		<div id="container">
+			<div class="ui_content">
+				<div class="ui_tb">
+					<table class="table" cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>广告名称</th>
+								<th>广告类型</th>
+								<th>组合名称</th>
+								<th>推送时间</th>
+								<th>完成时间</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="items"></tbody>
+					</table>
+				</div>
+				<div class="ui_tb_h30">
+					<div class="ui_flt" style="height: 30px; line-height: 30px;">
+						<span>共有</span>
+						<span class="ui_txt_bold04" id="total_record"></span>
+						<span>条记录，当前第</span>
+						<span class="ui_txt_bold04" id="current_page_index"></span>
+						<span>页</span>
+					</div>
+					<div class="ui_frt">
+						<input type="button" value="首页" class="ui_input_btn01" onclick="head_page()" />
+						<input type="button" value="上一页" class="ui_input_btn01" onclick="prev_page()"/>
+						<input type="button" value="下一页" class="ui_input_btn01" onclick="next_page()" />
+						<input type="button" value="尾页" class="ui_input_btn01" onclick="last_page()" />
+						<span>转到第</span>
+						<input type="text" id="pageindex" name="pageindex" class="ui_input_txt01" value="1" />
+						<span>页</span>
+						<input type="button" class="ui_input_btn01" value="跳转" onclick="goto_page()" />
+						<input type="hidden" id="total_page" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

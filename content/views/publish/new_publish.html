@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>信息管理系统</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script type="text/javascript" src="../../scripts/jquery/jquery-1.7.1.js"></script>
+	<link href="../../style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+	<link href="../../style/authority/common_style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="../../scripts/authority/commonAll.js"></script>
+	<script type="text/javascript" src="../../scripts/jquery/jquery-1.4.4.min.js"></script>
+	<script src="../../scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
+	<script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
+	<script type="text/javascript">
+		function show_select_data(select, datas){
+			while(select.firstChild != null){
+				select.removeChild(select.firstChild);
+			}
+			
+			for(var i = 0; i < datas.length; i++){
+				var id = datas[i].id;
+				var name = datas[i].name;
+				var option = document.createElement("option");
+				option.setAttribute("value", id);
+				option.innerText = name;
+				select.appendChild(option);
+			}
+		}
+		$(function(){
+			$.ajax({
+				url : "/advert/advert/list",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						show_select_data($("#advertId")[0], data.object);
+					}else{
+						alert("获取广告列表失败");
+					}
+				},
+				error : function(){
+					alert("获取广告列表失败");
+				}
+			});
+			$.ajax({
+				url : "/advert/rule/list",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						show_select_data($("#ruleId")[0], data.object);
+					}else{
+						alert("获取规则列表失败");
+					}
+				},
+				error : function(){
+					alert("获取规则列表失败");
+				}
+			});
+			$.ajax({
+				url : "/system/channel/list",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						show_select_data($("#channelId")[0], data.object);
+					}else{
+						alert("获取渠道列表失败");
+					}
+				},
+				error : function(){
+					alert("获取渠道列表失败");
+				}
+			});
+		});
+		function on_button_submit_click(){
+			var form = $('form');
+			var param = form.serialize();
+			
+			$.ajax({
+				url : "/advert/publish/insert",
+				dataType : "json",
+				data : param,
+				type : "POST",
+				success : function(data){
+					if(data.result){
+						document.location.href = "publish_list.html";
+					}else{
+						alert("添加失败");
+					}
+				},
+				error : function(){
+					alert("添加失败");
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+	<form>
+		<div id="container">
+			<div class="ui_content">
+				<div class="ui_text_indent">
+					<div id="box_border">
+						<div id="box_top">新增组合</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui_content">
+				<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0" class="new_web">
+					<tr>
+						<td class="ui_text_rt">组合名称</td>
+						<td class="ui_text_lt">
+							<input type="text" name="name" id="name" class="ui_select01" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">广告名称</td>
+						<td class="ui_text_lt">
+							<select name="advertId" id="advertId" class="ui_select01"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">渠道名称</td>
+						<td class="ui_text_lt">
+							<select name="channelId" id="channelId" class="ui_select01"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">规则名称</td>
+						<td class="ui_text_lt">
+							<select name="ruleId" id="ruleId" class="ui_select01"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">备注</td>
+						<td class="ui_text_lt">
+							<textarea name="memo" id="memo" cols="50" rows="7"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">状态</td>
+						<td class="ui_text_lt">
+							<select name="enable" id="enable" class="ui_select01">
+								<option value="0">禁用</option>
+								<option value="1">启用</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt" colspan="2">
+							<input id="btn_submit" type="button" value="提交" class="ui_input_btn01" onclick="on_button_submit_click()" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

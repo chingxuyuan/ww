@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>信息管理系统</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script type="text/javascript" src="../../scripts/jquery/jquery-1.7.1.js"></script>
+	<link href="../../style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+	<link href="../../style/authority/common_style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="../../scripts/authority/commonAll.js"></script>
+	<script type="text/javascript" src="../../scripts/jquery/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
+
+
+	<script type="text/javascript" src="../../scripts/jqueryui/jquery-ui.js"></script>
+	<link href="../../scripts/jqueryui/jquery-ui.css" rel="stylesheet" type="text/css">
+
+
+	<script type="text/javascript">
+		function get_time(t){
+			if(t==null){
+				return "";
+			}
+			
+			var s = t.split(" ");
+			
+			if(s==null || s.length != 2){
+				return "";
+			}else{
+				return s[1];
+			}
+		}
+		function show_select_data(select, datas){
+			while(select.firstChild != null){
+				select.removeChild(select.firstChild);
+			}
+			
+			select.appendChild(document.createElement("option"));
+			
+			for(var i = 0; i < datas.length; i++){
+				var name = datas[i].name;
+				var option = document.createElement("option");
+				option.setAttribute("value", name);
+				option.innerText = name;
+				select.appendChild(option);
+			}
+		}
+		$(function(){
+
+			$( "#startDate" ).datepicker({ dateFormat: 'yy-mm-dd' });
+			$( "#endDate" ).datepicker({ dateFormat: 'yy-mm-dd' });
+
+
+			$.ajax({
+				url : "/system/meta/list-os",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						show_select_data($("#destOS")[0], data.object);
+					}else{
+						alert("获取系统列表失败");
+					}
+				},
+				error : function(){
+					alert("获取系统列表失败");
+				}
+			});
+
+			$.ajax({
+				url : "/system/meta/list-area",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						show_select_data($("#area")[0], data.object);
+					}else{
+						alert("获取地区列表失败");
+					}
+				},
+				error : function(){
+					alert("获取地区列表失败");
+				}
+			});
+			$.ajax({
+				url : "/system/meta/list-brand",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						show_select_data($("#brand")[0], data.object);
+					}else{
+						alert("获取品牌列表失败");
+					}
+				},
+				error : function(){
+					alert("获取品牌列表失败");
+				}
+			});
+			$.ajax({
+				url : "/system/meta/list-isp",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						show_select_data($("#ISP")[0], data.object);
+					}else{
+						alert("获取运营商信息失败");
+					}
+				},
+				error : function(){
+					alert("获取运营商信息失败");
+				}
+			});
+			$.ajax({
+				url : "/system/meta/list-network",
+				dataType : "json",
+				type : "GET",
+				success : function(data){
+					if(data.result){
+						show_select_data($("#network")[0], data.object);
+					}else{
+						alert("获取网络类型失败");
+					}
+				},
+				error : function(){
+					alert("获取网络类型失败");
+				}
+			});
+		});
+		function list_city(){
+			var area = $("#area").val();
+			
+			$.ajax({
+				url : "/system/meta/list-city",
+				dataType : "json",
+				type : "POST",
+				data : "area=" + area,
+				success : function(data){
+					if(data.result){
+						show_select_data($("#city2")[0], data.object);
+					}else{
+						alert("获取城市列表失败");
+					}
+				},
+				error : function(){
+					alert("获取城市列表失败");
+				}
+			});
+		}
+		function set_city(){
+			var city = $("#city2").val();
+			$("#city").val(city);
+		}
+		$(function(){
+			var url = document.location.href;
+			var s = url.split("?");
+			
+			if(s == null || s.length != 2){
+				alert("无效id")
+				return;
+			}
+			
+			$.ajax({
+				url : "/advert/rule/select",
+				dataType : "json",
+				data : s[1],
+				type : "POST",
+				success : function(data){
+					if(data.result){
+						$("#id").val(data.object.id);
+						$("#name").val(data.object.name);
+						$("#price").val(data.object.price);
+						$("#destOS").val(data.object.destOS);
+						$("#city").val(data.object.city);
+						$("#brand").val(data.object.brand);
+						$("#ISP").val(data.object.ISP);
+						$("#hasSIM").val(data.object.hasSIM);
+						$("#network").val(data.object.network);
+						$("#startDate").val(data.object.startDate);
+						$("#endDate").val(data.object.endDate);
+						$("#startTime").val(get_time(data.object.startTime));
+						$("#endTime").val(get_time(data.object.endTime));
+						$("#interval").val(data.object.interval);
+						$("#memo").val(data.object.memo);
+						
+						if(data.object.enable){
+							$("#enable").val(1);
+						}else{
+							$("#enable").val(0);
+						}
+					}else{
+						alert("查询失败");
+					}
+				},
+				error : function(){
+					alert("查询失败");
+				}
+			});
+		});
+		function on_button_submit_click(){
+			var form = $('form');
+			var param = form.serialize();
+			
+			$.ajax({
+				url : "/advert/rule/update",
+				dataType : "json",
+				data : param,
+				type : "POST",
+				success : function(data){
+					if(data.result){
+						document.location.href = "rule_list.html";
+					}else{
+						alert("添加失败");
+					}
+				},
+				error : function(){
+					alert("添加失败");
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+	<form id="submitForm" name="submitForm" action="/xngzf/archives/initFangyuan.action" method="post">
+		<input type="hidden" id="id" name="id" />
+		<div id="container">
+			<div class="ui_content">
+				<div class="ui_text_indent">
+					<div id="box_border">
+						<div id="box_top">新增规则</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui_content">
+				<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0" class="new_web">
+					<tr>
+						<td class="ui_text_rt">规则名称</td>
+						<td class="ui_text_lt">
+							<input type="text" id="name" name="name" class="ui_input_txt02" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">价格</td>
+						<td class="ui_text_lt">
+							<input type="text" id="price" name="price" class="ui_input_txt02" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">定向系统</td>
+						<td class="ui_text_lt"><select name="destOS" id="destOS" class="ui_select01"></select></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">定向地区</td>
+						<td class="ui_text_lt">
+							<select name="area" id="area" class="ui_select01" onchange="list_city()"></select>
+							<select id="city2" class="ui_select01" onchange="set_city()"></select>
+							<span>当前城市</span>
+							<input type="text" id="city" name="city" class="ui_input_txt02" readonly="readonly" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">定向设备</td>
+						<td class="ui_text_lt">
+							<select name="brand" id="brand" class="ui_select01"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">定向运营商</td>
+						<td class="ui_text_lt">
+							<select name="ISP" id="ISP" class="ui_select01"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">SIM卡用户</td>
+						<td class="ui_text_lt">
+							<input type="radio" checked="checked" name="hasSIM" value="0" />
+							<span>不限</span>
+							<input type="radio" name="hasSIM" value="1" />
+							<span>仅限带有SIM卡的用户</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">定向网络类型:</td>
+						<td class="ui_text_lt">
+							<select name="network" id="network" class="ui_select01"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">定向日期</td>
+						<td class="ui_text_lt">
+							<input type="text" id="startDate" name="startDate" class="ui_input_txt02" />
+							<span> —— </span>
+							<input type="text" id="endDate" name="endDate" class="ui_input_txt02" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">定向时间段</td>
+						<td class="ui_text_lt">
+							<input type="text" id="startTime" name="startTime" class="ui_input_txt02" />
+							<span> —— </span>
+							<input type="text" id="endTime" name="endTime" class="ui_input_txt02" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">提交间隔（分钟）</td>
+						<td class="ui_text_lt">
+							<input type="text" id="interval" name="interval" class="ui_input_txt02" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">备注</td>
+						<td class="ui_text_lt">
+							<textarea name="memo" id="memo" cols="50" rows="7"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">状态</td>
+						<td class="ui_text_lt">
+							<select name="enable" id="enable" class="ui_select01">
+								<option value="0">禁用</option>
+								<option value="1">启用</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt" colspan="2">
+							<input id="btn_submit" type="button" value="提交" class="ui_input_btn01" onclick="on_button_submit_click()" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</form>
+</body>
+</html>
