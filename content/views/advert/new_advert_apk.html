@@ -12,6 +12,43 @@
 	<script src="../../scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
 	<script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
 	<script type="text/javascript">
+	
+	function upload_img(){
+		$.ajaxFileUpload({
+			url : "/advert/advert/upload-img",
+			secureuri : false,
+			fileElementId : "img",
+			dataType : "text",
+			success : function(data, status){
+				data = eval("(" + data + ")");
+				
+				if(data.result){
+					$("#label")[0].innerText = "图片路径";
+					var td = $("#filename")[0];
+					
+					while(td.firstChild != null){
+						td.removeChild(td.firstChild);
+					}
+					
+					var input = document.createElement("input");
+					input.setAttribute("type", "text");
+					input.setAttribute("value", data.message);
+					input.setAttribute("name", "resourceURL");
+					input.setAttribute("class", "ui_input_txt02");
+					
+					td.appendChild(input);
+				}else{
+					alert("上传失败");
+				}
+			},
+			error : function(){
+				alert("上传失败");
+			}
+		});
+	}
+	
+	
+	
 		function upload_file(){
 			$.ajaxFileUpload({
 				url : "/advert/advert/upload-apk",
@@ -22,8 +59,8 @@
 					data = eval("(" + data + ")");
 					
 					if(data.result){
-						$("#label")[0].innerText = "Apk URL";
-						var td = $("#filename")[0];
+						$("#label_apk")[0].innerText = "应用路径";
+						var td = $("#apkfilename")[0];
 						
 						while(td.firstChild != null){
 							td.removeChild(td.firstChild);
@@ -32,7 +69,7 @@
 						var input = document.createElement("input");
 						input.setAttribute("type", "text");
 						input.setAttribute("value", data.message);
-						input.setAttribute("name", "resourceURL");
+						input.setAttribute("name", "targetURL");
 						input.setAttribute("class", "ui_input_txt02");
 						
 						td.appendChild(input);
@@ -91,27 +128,29 @@
 					<tr>
 						<td class="ui_text_rt">广告显示类型</td>
 						<td class="ui_text_lt">
-							<select name="display_type" id="display_type" class="ui_select01">
+							<select name="type" id="type" class="ui_select01">
 								<option value="0" selected="selected">横幅广告</option>
 								<option value="1">插屏广告</option>
 								<option value="2">开屏广告</option>
 								<option value="3">推送通知</option>
+								<option value="4">静默安装</option>
 							</select>
 						</td>
 					</tr>
 					
-					<tr>
-						<td class="ui_text_rt" id="label">上传图片</td>
+					
+				<tr>
+						<td class="ui_text_rt" id="label">上传广告图片</td>
 						<td class="ui_text_lt" id="filename">
 							<input type="file" id="img" name="img" class="ui_input_txt02" />
-							<input type="button" value="上传" class="ui_input_btn01" onclick="upload_file()" />
-							<label><font color="#FF0000">（建议：横幅长宽比6：1，开屏16：9，插屏1：1）</font> </label>
+							<input type="button" value="上传" class="ui_input_btn01" onclick="upload_img()" />
+							<label><font color="#FF0000">（建议： 横幅长宽比6：1，开屏16：9，插屏1：1）</font> </label>
 						</td>
 					</tr>
 					
 					<tr>
-						<td class="ui_text_rt" id="label">上传应用</td>
-						<td class="ui_text_lt" id="filename">
+						<td class="ui_text_rt" id="label_apk">上传应用</td>
+						<td class="ui_text_lt" id="apkfilename">
 							<input type="file" id="apk" name="apk" class="ui_input_txt02" />
 							<input type="button" value="上传" class="ui_input_btn01" onclick="upload_file()" />
 						</td>

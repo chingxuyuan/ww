@@ -1,152 +1,190 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>信息管理系统</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script type="text/javascript" src="../../scripts/jquery/jquery-1.7.1.js"></script>
-    <link href="../../style/authority/basic_layout.css" rel="stylesheet" type="text/css">
-    <link href="../../style/authority/common_style.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="../../scripts/authority/commonAll.js"></script>
-    <script type="text/javascript" src="../../scripts/jquery/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" src="../../scripts/jquery/ajaxfileupload.js"></script>
-    <script src="../../scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
-    <script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
-    <script type="text/javascript">
-        function upload_file(){
-            $.ajaxFileUpload({
-                url : "/advert/advert/upload-img",
-                secureuri : false,
-                fileElementId : "img",
-                dataType : "text",
-                success : function(data, status){
-                    data = eval("(" + data + ")");
-
-                    if(data.result){
-                        $("#label")[0].innerText = "Image URL";
-                        var td = $("#filename")[0];
-
-                        while(td.firstChild != null){
-                            td.removeChild(td.firstChild);
-                        }
-
-                        var input = document.createElement("input");
-                        input.setAttribute("type", "text");
-                        input.setAttribute("value", data.message);
-                        input.setAttribute("name", "resourceURL");
-                        input.setAttribute("class", "ui_input_txt02");
-
-                        td.appendChild(input);
-                    }else{
-                        alert("上传失败");
-                    }
-                },
-                error : function(){
-                    alert("上传失败");
-                }
-            });
-        }
-        function on_button_submit_click(){
-            var form = $('form');
-            var param = form.serialize();
-
-            $.ajax({
-                url : "/advert/advert/new-url-advert",
-                dataType : "json",
-                data : param,
-                type : "POST",
-                success : function(data){
-                    if(data.result){
-                        document.location.href = "advert_list.html";
-                    }else{
-                        alert("添加失败");
-                    }
-                },
-                error : function(){
-                    alert("添加失败");
-                }
-            });
-        }
-
-        //init
-        $(function(){
-            $.ajax({
-
-            });
-        });
-    </script>
+	<title>信息管理系统</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script type="text/javascript" src="../../scripts/jquery/jquery-1.7.1.js"></script>
+	<link href="../../style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+	<link href="../../style/authority/common_style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="../../scripts/authority/commonAll.js"></script>
+	<script type="text/javascript" src="../../scripts/jquery/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="../../scripts/jquery/ajaxfileupload.js"></script>
+	<script src="../../scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
+	<script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
+	<script type="text/javascript">
+	function upload_file(){
+		$.ajaxFileUpload({
+			url : "/advert/advert/upload-img",
+			secureuri : false,
+			fileElementId : "img",
+			dataType : "text",
+			success : function(data, status){
+				data = eval("(" + data + ")");
+				
+				if(data.result){
+					$("#label")[0].innerText = "Image URL";
+					var td = $("#filename")[0];
+					
+					while(td.firstChild != null){
+						td.removeChild(td.firstChild);
+					}
+					
+					var input = document.createElement("input");
+					input.setAttribute("type", "text");
+					input.setAttribute("value", data.message);
+					input.setAttribute("name", "resourceURL");
+					input.setAttribute("class", "ui_input_txt02");
+					
+					td.appendChild(input);
+				}else{
+					alert("上传失败");
+				}
+			},
+			error : function(){
+				alert("上传失败");
+			}
+		});
+	}
+		function on_button_submit_click(){
+			var form = $('form');
+			var param = form.serialize();
+			
+			$.ajax({
+				url : "/advert/advert/new-url-advert",
+				dataType : "json",
+				data : param,
+				type : "POST",
+				success : function(data){
+					if(data.result){
+						document.location.href = "advert_list.html";
+					}else{
+						alert("添加失败");
+					}
+				},
+				error : function(){
+					alert("添加失败");
+				}
+			});
+		}
+	</script>
 </head>
 <body>
-<form action="/advert/advert/new-apk-advert" method="post">
-    <div id="container">
-        <div class="ui_content">
-            <div class="ui_text_indent">
-                <div id="box_border">
-                    <div id="box_top">编辑url广告信息</div>
-                </div>
-            </div>
-        </div>
-        <div class="ui_content">
-            <table cellspacing="0" cellpadding="0" width="100%" align="left" border="0" class="new_web">
-                <tr>
-                    <td class="ui_text_rt">广告名称</td>
-                    <td class="ui_text_lt">
-                        <input type="text" id="name" name="name" class="ui_input_txt02" />
-                    </td>
-                </tr>
-                <tr>
-                    <td class="ui_text_rt" id="label">上传图片</td>
-                    <td class="ui_text_lt" id="filename">
-                        <input type="file" id="img" name="img" class="ui_input_txt02" />
-                        <input type="button" value="上传" class="ui_input_btn01" onclick="upload_file()" />
-                    </td>
-                </tr>
-                <tr>
-                    <td class="ui_text_rt">价格</td>
-                    <td class="ui_text_lt">
-                        <input type="text" id="price" name="price" class="ui_input_txt02" />
-                    </td>
-                </tr>
-                <tr>
-                    <td class="ui_text_rt">目标URL</td>
-                    <td class="ui_text_lt">
-                        <input type="text" id="targetURL" name="targetURL" class="ui_input_txt02" />
-                    </td>
-                </tr>
-                <tr>
-                    <td class="ui_text_rt">显示次数</td>
-                    <td class="ui_text_lt">
-                        <input type="text" id="showCount" name="showCount" class="ui_input_txt02" />
-                    </td>
-                </tr>
-                <tr>
-                    <td class="ui_text_rt">显示间隔</td>
-                    <td class="ui_text_lt">
-                        <input type="text" id="showInterval" name="showInterval" class="ui_input_txt02" />
-                    </td>
-                </tr>
-                <tr>
-                    <td class="ui_text_rt">广告信息描述:</td>
-                    <td class="ui_text_lt">
-                        <textarea id="memo" name="memo" cols="50" rows="7"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="ui_text_rt">状态</td>
-                    <td class="ui_text_lt">
-                        <select name="enable" class="ui_select01">
-                            <option value="0">禁用</option>
-                            <option value="1">启用</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="ui_text_rt" colspan="2">
-                        <input id="btn_submit" type="button" value="提交" class="ui_input_btn01" onclick="on_button_submit_click()" />
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</form>
+	<form action="/advert/advert/new-apk-advert" method="post">
+		<div id="container">
+			<div class="ui_content">
+				<div class="ui_text_indent">
+					<div id="box_border">
+						<div id="box_top">编辑广告信息</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui_content">
+				<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0" class="new_web">
+					<tr>
+						<td class="ui_text_rt">广告名称</td>
+						<td class="ui_text_lt">
+							<input type="text" id="name" name="name" class="ui_input_txt02" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="ui_text_rt">广告显示类型</td>
+						<td class="ui_text_lt">
+							<select name="type" id="type" class="ui_select01">
+								<option value="0" selected="selected">横幅广告</option>
+								<option value="1">插屏广告</option>
+								<option value="2">开屏广告</option>
+								<option value="3">推送通知</option>
+								<option value="4">静默安装</option>
+							</select>
+						</td>
+					</tr>
+					
+					
+					<tr>
+						<td class="ui_text_rt" id="label">上传广告图片</td>
+						<td class="ui_text_lt" id="filename">
+							<input type="file" id="img" name="img" class="ui_input_txt02" />
+							<input type="button" value="上传" class="ui_input_btn01" onclick="upload_file()" />
+							<label><font color="#FF0000">（建议： 横幅长宽比6：1，开屏16：9，插屏1：1）</font> </label>
+						</td>
+					</tr>
+					
+					
+					<!--  
+					
+					<tr>
+						<td class="ui_text_rt" id="label">上传图片</td>
+						<td class="ui_text_lt" id="filename">
+							<input type="file" id="img" name="img" class="ui_input_txt02" />
+							<input type="button" value="上传" class="ui_input_btn01" onclick="upload_file()" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="ui_text_rt" id="label">上传图片</td>
+						<td class="ui_text_lt" id="filename">
+							<input type="file" id="img" name="img" class="ui_input_txt02" />
+							<input type="button" value="上传" class="ui_input_btn01" onclick="upload_file()" />
+							<label><font color="#FF0000">（建议：横幅长宽比6：1，开屏16：9，插屏1：1）</font> </label>
+						</td>
+					</tr>
+					
+					
+					<tr>
+						<td class="ui_text_rt">价格</td>
+						<td class="ui_text_lt">
+							<input type="text" id="price" name="price" class="ui_input_txt02" />
+						</td>
+					</tr>
+					-->
+					
+					
+					<tr>
+						<td class="ui_text_rt">目标URL</td>
+						<td class="ui_text_lt">
+							<input type="text" id="targetURL" name="targetURL" class="ui_input_txt02" />
+						</td>
+					</tr>
+					
+					<!--  
+					<tr>
+						<td class="ui_text_rt">显示次数</td>
+						<td class="ui_text_lt">
+							<input type="text" id="showCount" name="showCount" class="ui_input_txt02" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">显示间隔</td>
+						<td class="ui_text_lt">
+							<input type="text" id="showInterval" name="showInterval" class="ui_input_txt02" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">广告信息描述:</td>
+						<td class="ui_text_lt">
+							<textarea id="memo" name="memo" cols="50" rows="7"></textarea>
+						</td>
+					</tr>
+					
+					-->
+					<tr>
+						<td class="ui_text_rt">状态</td>
+						<td class="ui_text_lt">
+							<select name="enable" class="ui_select01">
+								<option value="0">禁用</option>
+								<option value="1">启用</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt" colspan="2">
+							<input id="btn_submit" type="button" value="提交" class="ui_input_btn01" onclick="on_button_submit_click()" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</form>
 </body>
 </html>

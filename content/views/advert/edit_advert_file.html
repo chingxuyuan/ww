@@ -38,12 +38,16 @@
                     if(data.result){
                         $("#name").val(data.object.name);
                         $("#id").val(data.object.id);
-                        $("#price").val(data.object.price);
-                        $("#package_name").text(data.object.resourceURL);
-                        $("#system").val(data.object.system);
-                        $("#replace").val(data.object.replace);
-                        $("#memo").val(data.object.memo);
-                        $("#enable").val(data.object.enable);
+                        $("#show_type").val(new Number(data.object.type)+"");
+                      //  $("#price").val(data.object.price);
+                        $("#resourceURL").text(data.object.resourceURL);
+                        $("#targetURL").text(data.object.targetURL);
+                       // $("#system").val(data.object.system);
+                      //  $("#replace").val(data.object.replace);
+                      //  $("#memo").val(data.object.memo);
+                    	  $("#enable").val(new Number(data.object.enable)+"");
+                      
+                       
                     }else{
                         alert("查询失败");
                     }
@@ -99,12 +103,37 @@
                         <input type="text" id="name" name="name" class="ui_input_txt02" />
                     </td>
                 </tr>
+                
                 <tr>
-                    <td class="ui_text_rt" id="label">应用名</td>
+						<td class="ui_text_rt">广告显示类型</td>
+						<td class="ui_text_lt">
+							<select id="show_type" class="ui_select01" disabled>
+								<option value="0" >横幅广告</option>
+								<option value="1">插屏广告</option>
+								<option value="2">开屏广告</option>
+								<option value="3">推送通知</option>
+								<option value="4">静默安装</option>
+							</select>
+						</td>
+					</tr>
+                
+                
+                 <tr>
+                    <td class="ui_text_rt" id="label_img">广告图片</td>
                     <td class="ui_text_lt" >
-                     : <b id="package_name"></b>
+                     : <b id="resourceURL"></b>
                     </td>
                 </tr>
+                
+                
+                <tr>
+                    <td class="ui_text_rt" id="label_apk">应用名</td>
+                    <td class="ui_text_lt" >
+                     : <b id="targetURL"></b>
+                    </td>
+                </tr>
+                
+                <!--  
                 <tr>
                     <td class="ui_text_rt">价格</td>
                     <td class="ui_text_lt">
@@ -135,6 +164,9 @@
                         <textarea id="memo" name="memo" cols="50" rows="7"></textarea>
                     </td>
                 </tr>
+                
+                -->
+                
                 <tr>
                     <td class="ui_text_rt">状态</td>
                     <td class="ui_text_lt">

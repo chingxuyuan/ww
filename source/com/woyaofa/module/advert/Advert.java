@@ -87,7 +87,7 @@ public class Advert {
 	@At("/new-apk-advert")
 	public Result newApkAdvert (@Param("..") AdvertInfo advert) {
 
-		advert.setType(GlobalConstants.ADVERT_TYPE_INSTALL);
+		//advert.setType(GlobalConstants.ADVERT_TYPE_INSTALL);
 		advert.setCreateTime(new Date());
 		advert = dao.insert(advert);
 		return Result.newObjectResult(advert);
@@ -96,7 +96,7 @@ public class Advert {
 	@At("/update-apk-advert")
 	public Result updateApkAdvert (@Param("..") AdvertInfo advert) {
 
-		advert.setType(GlobalConstants.ADVERT_TYPE_INSTALL);
+		//advert.setType(GlobalConstants.ADVERT_TYPE_INSTALL);
 		advert.setCreateTime(new Date());
         advert.setPackageName(null);
         advert.setResourceURL(null);
@@ -155,7 +155,7 @@ public class Advert {
 	@At("/new-url-advert")
 	public Result newURLAdvert (@Param("..") AdvertInfo advert) {
 
-		advert.setType(GlobalConstants.ADVERT_TYPE_BANNER);
+		//advert.setType(GlobalConstants.ADVERT_TYPE_BANNER);
 		advert.setCreateTime(new Date());
 		advert = dao.insert(advert);
 		return Result.newObjectResult(advert);

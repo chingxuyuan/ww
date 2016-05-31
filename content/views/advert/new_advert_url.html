@@ -12,39 +12,39 @@
 	<script src="../../scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
 	<script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
 	<script type="text/javascript">
-		function upload_file(){
-			$.ajaxFileUpload({
-				url : "/advert/advert/upload-img",
-				secureuri : false,
-				fileElementId : "img",
-				dataType : "text",
-				success : function(data, status){
-					data = eval("(" + data + ")");
+	function upload_file(){
+		$.ajaxFileUpload({
+			url : "/advert/advert/upload-img",
+			secureuri : false,
+			fileElementId : "img",
+			dataType : "text",
+			success : function(data, status){
+				data = eval("(" + data + ")");
+				
+				if(data.result){
+					$("#label")[0].innerText = "Image URL";
+					var td = $("#filename")[0];
 					
-					if(data.result){
-						$("#label")[0].innerText = "Image URL";
-						var td = $("#filename")[0];
-						
-						while(td.firstChild != null){
-							td.removeChild(td.firstChild);
-						}
-						
-						var input = document.createElement("input");
-						input.setAttribute("type", "text");
-						input.setAttribute("value", data.message);
-						input.setAttribute("name", "resourceURL");
-						input.setAttribute("class", "ui_input_txt02");
-						
-						td.appendChild(input);
-					}else{
-						alert("上传失败");
+					while(td.firstChild != null){
+						td.removeChild(td.firstChild);
 					}
-				},
-				error : function(){
+					
+					var input = document.createElement("input");
+					input.setAttribute("type", "text");
+					input.setAttribute("value", data.message);
+					input.setAttribute("name", "resourceURL");
+					input.setAttribute("class", "ui_input_txt02");
+					
+					td.appendChild(input);
+				}else{
 					alert("上传失败");
 				}
-			});
-		}
+			},
+			error : function(){
+				alert("上传失败");
+			}
+		});
+	}
 		function on_button_submit_click(){
 			var form = $('form');
 			var param = form.serialize();
@@ -100,6 +100,27 @@
 						</td>
 					</tr>
 					
+					
+					<tr>
+						<td class="ui_text_rt" id="label">上传广告图片</td>
+						<td class="ui_text_lt" id="filename">
+							<input type="file" id="img" name="img" class="ui_input_txt02" />
+							<input type="button" value="上传" class="ui_input_btn01" onclick="upload_file()" />
+							<label><font color="#FF0000">（建议： 横幅长宽比6：1，开屏16：9，插屏1：1）</font> </label>
+						</td>
+					</tr>
+					
+					
+					<!--  
+					
+					<tr>
+						<td class="ui_text_rt" id="label">上传图片</td>
+						<td class="ui_text_lt" id="filename">
+							<input type="file" id="img" name="img" class="ui_input_txt02" />
+							<input type="button" value="上传" class="ui_input_btn01" onclick="upload_file()" />
+						</td>
+					</tr>
+					
 					<tr>
 						<td class="ui_text_rt" id="label">上传图片</td>
 						<td class="ui_text_lt" id="filename">
@@ -108,7 +129,8 @@
 							<label><font color="#FF0000">（建议：横幅长宽比6：1，开屏16：9，插屏1：1）</font> </label>
 						</td>
 					</tr>
-					<!--  
+					
+					
 					<tr>
 						<td class="ui_text_rt">价格</td>
 						<td class="ui_text_lt">
