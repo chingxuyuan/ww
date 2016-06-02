@@ -37,8 +37,6 @@ public class Sdk {
 	@At("/sdk/randAdvert")
 	@Ok("json")
 	public String randAdvert(int type) {
-		
-		
 		/**
 		 * http://www.cnblogs.com/hfww/archive/2011/07/08/2223359.html
 		 */
