@@ -6,9 +6,9 @@ var ioc = {
     dataSource : {
         type : "org.nutz.dao.impl.SimpleDataSource",
         fields : {
-            jdbcUrl : "jdbc:mysql://127.0.0.1:3306/advert",
-            username : "root",
-            password : "root"
+            jdbcUrl : "jdbc:mysql://localhost:3306/advert",
+            username : "adsdk",
+            password : "wwadsdk"
         }
     }
 }
