@@ -108,6 +108,18 @@ function get_menu_data(){
 		"resourceName" : "外部链接",
 		"resourceOrder" : 0,
 		"resourceType" : ""
+	} ,{
+		"accessPath" : "views/advert/new_advert_push.html?ver="+ver,
+		"checked" : false,
+		"delFlag" : 0,
+		"parentID" : 20,
+		"resourceCode" : "",
+		"resourceDesc" : "",
+		"resourceGrade" : 3,
+		"resourceID" : 24,
+		"resourceName" : "推送广告",
+		"resourceOrder" : 0,
+		"resourceType" : ""
 	}, {
 		"accessPath" : "",
 		"checked" : false,

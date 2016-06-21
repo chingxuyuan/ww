@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -17,9 +18,11 @@ import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Fail;
 import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
+import org.nutz.mvc.annotation.Param;
 
 import com.google.gson.Gson;
 import com.woyaofa.data.advert.AdvertInfo;
+import com.woyaofa.exchange.web.Result;
 
 @IocBean
 @Fail("http:500")
@@ -59,5 +62,12 @@ public class Sdk {
 		String json = new Gson().toJson(advert);	
 		return json;
 	}
-
+	
+	@At("/sdk/updateAdvert")
+	public Result updateApkAdvert (@Param("..") AdvertInfo advert) {
+		System.out.print("updateAdvert-------------"+advert.getId());
+		System.out.print("updateAdvert-------------"+advert.getPackageName());
+		dao.updateIgnoreNull(advert);
+		return Result.newObjectResult(advert);
+	}
 }
