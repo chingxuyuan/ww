@@ -1,52 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>信息管理系统</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<script type="text/javascript" src="../../scripts/jquery/jquery-1.7.1.js"></script>
-	<link href="../../style/authority/basic_layout.css" rel="stylesheet" type="text/css">
-	<link href="../../style/authority/common_style.css" rel="stylesheet" type="text/css">
-	<script type="text/javascript" src="../../scripts/authority/commonAll.js"></script>
-	<script type="text/javascript" src="../../scripts/jquery/jquery-1.4.4.min.js"></script>
-	<script type="text/javascript" src="../../scripts/jquery/ajaxfileupload.js"></script>
-	<script src="../../scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
-	<script type="text/javascript" src="../../scripts/artDialog/artDialog.js?skin=default"></script>
-	<script type="text/javascript">
+<title>信息管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript"
+	src="../../scripts/jquery/jquery-1.7.1.js"></script>
+<link href="../../style/authority/basic_layout.css" rel="stylesheet"
+	type="text/css">
+<link href="../../style/authority/common_style.css" rel="stylesheet"
+	type="text/css">
+<script type="text/javascript"
+	src="../../scripts/authority/commonAll.js"></script>
+<script type="text/javascript"
+	src="../../scripts/jquery/jquery-1.4.4.min.js"></script>
+<script type="text/javascript"
+	src="../../scripts/jquery/ajaxfileupload.js"></script>
+<script src="../../scripts/My97DatePicker/WdatePicker.js"
+	type="text/javascript" defer="defer"></script>
+<script type="text/javascript"
+	src="../../scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+
+
 	
-	function upload_img(){
-		$.ajaxFileUpload({
-			url : "/advert/advert/upload-img",
-			secureuri : false,
-			fileElementId : "img",
-			dataType : "text",
-			success : function(data, status){
-				data = eval("(" + data + ")");
-				
-				if(data.result){
-					$("#label")[0].innerText = "图片路径";
-					var td = $("#filename")[0];
-					
-					while(td.firstChild != null){
-						td.removeChild(td.firstChild);
-					}
-					
-					var input = document.createElement("input");
-					input.setAttribute("type", "text");
-					input.setAttribute("value", data.message);
-					input.setAttribute("name", "resourceURL");
-					input.setAttribute("class", "ui_input_txt02");
-					
-					td.appendChild(input);
-				}else{
-					alert("上传失败");
-				}
-			},
-			error : function(){
-				alert("上传失败");
-			}
-		});
+	function select_type(){
+		var v = $("#push_type")[0].value;
+		if(v == 1){
+			$("#type_apk").hide();
+			$("#type_url").show();
+		}else{
+			$("#type_url").hide();
+			$("#type_apk").show();
+		}
+		
 	}
-	
 	
 	
 		function upload_file(){
@@ -61,18 +48,21 @@
 					if(data.result){
 						$("#label_apk")[0].innerText = "应用路径";
 						var td = $("#apkfilename")[0];
-						
 						while(td.firstChild != null){
 							td.removeChild(td.firstChild);
 						}
-						
 						var input = document.createElement("input");
+						
 						input.setAttribute("type", "text");
+						
 						input.setAttribute("value", data.message);
+						
 						input.setAttribute("name", "targetURL");
+						
 						input.setAttribute("class", "ui_input_txt02");
 						
 						td.appendChild(input);
+						
 					}else{
 						alert("上传失败");
 					}
@@ -87,7 +77,7 @@
 			var param = form.serialize();
 			
 			$.ajax({
-				url : "/advert/pushAdvert",
+				url : "/advert/push-advert",
 				dataType : "json",
 				data : param,
 				type : "POST",
@@ -109,6 +99,10 @@
 	<form>
 		<div id="container">
 			<div class="ui_content">
+
+
+
+
 				<div class="ui_text_indent">
 					<div id="box_border">
 						<div id="box_top">推送广告</div>
@@ -116,25 +110,63 @@
 				</div>
 			</div>
 			<div class="ui_content">
-				<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0" class="new_web">
+				<table cellspacing="0" cellpadding="0" width="100%" align="left"
+					border="0" class="new_web">
+					<tr>
+						<td class="ui_text_rt">广告名称</td>
+						<td class="ui_text_lt"><input type="hidden" id="id" name="id"
+							class="ui_input_txt02" value="0" /> <input type="text" id="name"
+							name="name" class="ui_input_txt02" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_lt"><input type="hidden" id="type"
+							name="type" class="ui_input_txt02" value="3" />
+					</tr>
+					<tr>
+						<td class="ui_text_rt">广告类型</td>
+						<td class="ui_text_lt">
+							<select id="push_type" class="ui_select01" onchange="select_type()">
+								<option value="0">应用推广</option>
+								<option value="1">网址链接</option>
+							</select>
+						</td>
+					</tr>
+
+					<tr id = "type_apk">
+						<td class="ui_text_rt" id="label_apk">上传应用</td>
+						<td class="ui_text_lt" id="apkfilename"><input type="file"
+							id="apk" name="apk" class="ui_input_txt02" /> <input
+							type="button" value="上传" class="ui_input_btn01"
+							onclick="upload_file()" /></td>
+					</tr>
+
+
+					<tr id = "type_url" style="display:none;" >
+						<td class="ui_text_rt">目标URL</td>
+						<td class="ui_text_lt">
+							<input type="text" id="targetURL" name="targetURL" class="ui_input_txt02" />
+						</td>
+					</tr>
+
 					<tr>
 						<td class="ui_text_rt">推送标题</td>
-						<td class="ui_text_lt">
-							<input type="text" id="subject" name="subject" class="ui_input_txt02" />
-						</td>
+						<td class="ui_text_lt"><input type="text" id="topic"
+							name="topic" class="ui_input_txt02" /></td>
+					</tr>
+
+
+
+					<tr>
+						<td class="ui_text_rt">推送描述</td>
+						<td class="ui_text_lt"><textarea name="content" cols="50"
+								rows="7"></textarea></td>
 					</tr>
 					
+
 					<tr>
-						<td class="ui_text_rt">推送内容</td>
-						<td class="ui_text_lt">
-							<textarea name="body" cols="50" rows="7"></textarea>
-						</td>
-					</tr>
-				
-					<tr>
-						<td class="ui_text_rt" colspan="2">
-							<input id="btn_submit" type="button" value="立即推送" class="ui_input_btn01" onclick="on_button_submit_click()" />
-						</td>
+						<td class="ui_text_rt" colspan="2"><input id="btn_submit"
+							type="button" value="立即推送" class="ui_input_btn01"
+							onclick="on_button_submit_click()" /></td>
 					</tr>
 				</table>
 			</div>

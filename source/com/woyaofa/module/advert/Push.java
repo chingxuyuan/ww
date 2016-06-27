@@ -1,12 +1,10 @@
 package com.woyaofa.module.advert;
 
-import java.io.IOException;
-
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -23,33 +21,48 @@ import com.woyaofa.exchange.web.Result;
 public class Push {
 
 	
-	AbstractXMPPConnection conn2 = null;
 	@Inject
 	Dao dao = null;
 
-	@At("/advert/pushAdvert")
+	@At("/advert/push-adevrt")
 	@Ok("json")
-	public Result pushAdvert(String subject, String body, String id) {
-		System.out.println(subject + " " + body);
-		push();
+	public Result pushAdvert(String topic, String b,String content) {
+		System.out.println(topic + " " + content);
+		push(topic,content);
 		return Result.newSuccessResult();
 	}
-
-	private void push() {
+	
+	private void push(String topic,String content){
+          String broker       = "tcp://112.124.127.154:1883";
+          String clientId     = "wwlhmqtt";
+          MemoryPersistence persistence = new MemoryPersistence();
+          try {
+              MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
+              MqttConnectOptions connOpts = new MqttConnectOptions();
+              connOpts.setCleanSession(true);
+              System.out.println("Connecting to broker: "+broker);
+              sampleClient.connect(connOpts);
+              System.out.println("Connected");
+              System.out.println("Publishing message: "+content);
+              MqttMessage message = new MqttMessage(content.getBytes());
+            //2, 仅仅接收一次
+              message.setQos(2);
+              sampleClient.publish(topic, message);
+              System.out.println("Message published");
+              sampleClient.disconnect();
+              System.out.println("Disconnected");
+          } catch(MqttException me) {
+              System.out.println("reason "+me.getReasonCode());
+              System.out.println("msg "+me.getMessage());
+              System.out.println("loc "+me.getLocalizedMessage());
+              System.out.println("cause "+me.getCause());
+              System.out.println("excep "+me);
+              me.printStackTrace();
+          }
 		
-		if(conn2 !=null && conn2.isConnected()){
-			conn2.disconnect();
-		}
-//		XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-//				// .setUsernameAndPassword("username", "password")
-//				.setServiceName("cpc").setHost("192.168.1.119").setPort(5222).build();
-//
-//		conn2 = new XMPPTCPConnection(config);
-//		try {
-//			conn2.connect();
-//		} catch (SmackException | IOException | XMPPException e) {
-//			e.printStackTrace();
-//			conn2.disconnect();
-//		}
 	}
+	
+	
+	
+
 }
