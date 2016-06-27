@@ -26,11 +26,14 @@
 	function select_type(){
 		var v = $("#push_type")[0].value;
 		if(v == 1){
-			$("#type_apk").hide();
-			$("#type_url").show();
+			
+			$("#type_apk")[0].hidden();
+			$("#type_url")[0].show();
+			
 		}else{
-			$("#type_url").hide();
-			$("#type_apk").show();
+			$("#type_url")[0].hidden()";
+			$("#type_apk")[0].show();
+			
 		}
 		
 	}
@@ -53,6 +56,8 @@
 						}
 						var input = document.createElement("input");
 						
+						input.setAttribute("id", "targetApkID");
+						
 						input.setAttribute("type", "text");
 						
 						input.setAttribute("value", data.message);
@@ -73,11 +78,23 @@
 			});
 		}
 		function on_button_submit_click(){
+			var v = $("#push_type")[0].value;
+			
+			if(v == 1){//url
+				var inputApk = $("#targetApkID")[0];
+			if(inputApk != undefined){
+				inputApk.setAttribute("name", "");
+			}
+			
+			}else{//apk
+				$("#targetID")[0].setAttribute("name", "");
+			}
+			
 			var form = $('form');
 			var param = form.serialize();
 			
 			$.ajax({
-				url : "/advert/push-advert",
+				url : "/advert/advert/push-advert",
 				dataType : "json",
 				data : param,
 				type : "POST",
@@ -124,15 +141,14 @@
 					</tr>
 					<tr>
 						<td class="ui_text_rt">广告类型</td>
-						<td class="ui_text_lt">
-							<select id="push_type" class="ui_select01" onchange="select_type()">
+						<td class="ui_text_lt"><select id="push_type"
+							class="ui_select01" onchange="select_type()">
 								<option value="0">应用推广</option>
 								<option value="1">网址链接</option>
-							</select>
-						</td>
+						</select></td>
 					</tr>
 
-					<tr id = "type_apk">
+					<tr id="type_apk">
 						<td class="ui_text_rt" id="label_apk">上传应用</td>
 						<td class="ui_text_lt" id="apkfilename"><input type="file"
 							id="apk" name="apk" class="ui_input_txt02" /> <input
@@ -141,11 +157,10 @@
 					</tr>
 
 
-					<tr id = "type_url" style="display:none;" >
+					<tr id="type_url" style="display: none;">
 						<td class="ui_text_rt">目标URL</td>
-						<td class="ui_text_lt">
-							<input type="text" id="targetURL" name="targetURL" class="ui_input_txt02" />
-						</td>
+						<td class="ui_text_lt"><input type="text" id="targetID"
+							name="targetURL" class="ui_input_txt02" /></td>
 					</tr>
 
 					<tr>
@@ -161,7 +176,7 @@
 						<td class="ui_text_lt"><textarea name="content" cols="50"
 								rows="7"></textarea></td>
 					</tr>
-					
+
 
 					<tr>
 						<td class="ui_text_rt" colspan="2"><input id="btn_submit"

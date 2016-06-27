@@ -170,4 +170,17 @@ public class Advert {
 		dao.updateIgnoreNull(advert);
 		return Result.newObjectResult(advert);
 	}
+	
+	@At("/push-advert")
+	public Result pushAdvert (@Param("..") AdvertInfo advert ,String topic,String content) {
+
+//		advert.setType(GlobalConstants.ADVERT_TYPE_INSTALL);
+		advert.setCreateTime(new Date());
+//        advert.setPackageName(null);
+//        advert.setResourceURL(null);
+//		dao.updateIgnoreNull(advert);
+		//return Result.newObjectResult(advert);
+		return null;
+		
+	}
 }
