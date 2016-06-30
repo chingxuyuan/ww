@@ -70,4 +70,24 @@ public class Sdk {
 		dao.updateIgnoreNull(advert);
 		return Result.newObjectResult(advert);
 	}
+	
+	
+	/**
+	 *	根据参数获取一个广告
+	 * 
+	 * @return
+	 */
+	@At("/sdk/requestAdvert")
+	@Ok("json")
+	public String requestAdvert(int id) {
+		System.out.print("requestAdvert-------------"+id);
+		AdvertInfo advert = dao.fetch(AdvertInfo.class, id);
+		String json = new Gson().toJson(advert);	
+		System.out.print("requestAdvert-------------"+json);
+		return json;
+	}
+	
+	
+	
+	
 }

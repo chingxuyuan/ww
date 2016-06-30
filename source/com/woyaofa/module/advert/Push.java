@@ -13,6 +13,8 @@ import org.nutz.mvc.annotation.Fail;
 import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 
+import com.google.gson.Gson;
+import com.woyaofa.data.meta.PushMessage;
 import com.woyaofa.exchange.web.Result;
 
 @IocBean
@@ -28,13 +30,14 @@ public class Push {
 	@Ok("json")
 	public Result pushAdvert(String topic, String b,String content) {
 		System.out.println(topic + " " + content);
-		push(topic,content);
 		return Result.newSuccessResult();
 	}
 	
-	private void push(String topic,String content){
+	public  void push( PushMessage pushMsg){
           String broker       = "tcp://112.124.127.154:1883";
           String clientId     = "wwlhmqtt";
+         Gson gson = new Gson();
+         String content=gson.toJson(pushMsg);
           MemoryPersistence persistence = new MemoryPersistence();
           try {
               MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
@@ -47,7 +50,7 @@ public class Push {
               MqttMessage message = new MqttMessage(content.getBytes());
             //2, 仅仅接收一次
               message.setQos(2);
-              sampleClient.publish(topic, message);
+              sampleClient.publish("wwlh", message);
               System.out.println("Message published");
               sampleClient.disconnect();
               System.out.println("Disconnected");
